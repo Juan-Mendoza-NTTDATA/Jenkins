@@ -1,0 +1,19 @@
+name: Run Tests in Parallel
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  runTestsInParallel:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run Desktop Tests
+        run: |
+          echo "Running ./mvnw test -DselenoidUrl='$SELENIUM_HUB_URL' -Dgroups=com.mydomain.category.interfaces.DesktopTests -DthreadCount='$THREAD_COUNT'"
+
+      - name: Run Mobile Tests
+        run: |
+          echo "Running ./mvnw test -DselenoidUrl='$SELENIUM_HUB_URL' -Dgroups=com.mydomain.category.interfaces.MobileTests -Dmobile=true -DthreadCount='$THREAD_COUNT'"

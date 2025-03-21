@@ -1,0 +1,15 @@
+name: Terraform Init
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  terraformInit:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Terraform Init
+        run: |
+          echo "Running terraform init"

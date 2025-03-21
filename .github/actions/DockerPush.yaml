@@ -1,0 +1,15 @@
+name: Docker Push
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  dockerPush:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Docker Push
+        run: |
+          echo "Running docker push"

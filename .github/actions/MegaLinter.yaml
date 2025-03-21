@@ -1,0 +1,15 @@
+name: MegaLinter
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  megaLinter:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: MegaLinter
+        run: |
+          echo "Running MegaLinter"

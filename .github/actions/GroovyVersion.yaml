@@ -1,0 +1,15 @@
+name: Groovy Version
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  groovyVersion:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Groovy Version
+        run: |
+          echo "Running groovy --version"

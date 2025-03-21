@@ -1,0 +1,19 @@
+name: Git Merge
+
+on:
+  push:
+    branches:
+      - 'staging'
+
+jobs:
+  gitMerge:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Git Merge
+        run: |
+          echo "Running ${{ github.workflow }} Build ${{ github.run_id }} on ${{ github.server_url }}"
+          timeout -t 1m sh -c 'whoami'
+          timeout -t 1m sh -c 'id'
+          timeout -t 1m sh -c 'env | sort'
+          echo "Running git_merge_branch.sh staging dev"

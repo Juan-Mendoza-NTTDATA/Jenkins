@@ -1,0 +1,19 @@
+name: Parent
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  parent:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Stage One
+        run: |
+          echo "Running stage one"
+
+      - name: Stage Two
+        run: |
+          echo "Running stage two"

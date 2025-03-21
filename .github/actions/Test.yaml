@@ -1,0 +1,16 @@
+name: Test
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Test
+        run: |
+          echo "Testing..."
+          echo "Running make test"

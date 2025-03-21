@@ -1,0 +1,16 @@
+name: Surefire Report
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  surefireReport:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Surefire Report
+        run: |
+          echo "Running ./mvnw clean install site surefire-report:report"
+          echo "Publishing Surefire Report"

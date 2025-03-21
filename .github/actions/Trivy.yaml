@@ -1,0 +1,15 @@
+name: Trivy
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  trivy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trivy
+        run: |
+          echo "Running trivy"

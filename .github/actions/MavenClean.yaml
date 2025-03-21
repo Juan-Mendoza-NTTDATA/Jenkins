@@ -1,0 +1,15 @@
+name: Maven Clean
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  mavenClean:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Maven Clean
+        run: |
+          echo "Running ./mvnw clean"

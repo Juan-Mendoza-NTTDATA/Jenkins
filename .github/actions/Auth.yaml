@@ -1,0 +1,16 @@
+name: Auth
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  auth:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Auth
+        run: |
+          echo "Running gcpActivateServiceAccount"
+          echo "Printing auth"

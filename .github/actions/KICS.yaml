@@ -1,0 +1,15 @@
+name: KICS
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  kics:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: KICS
+        run: |
+          echo "Running kics scan"

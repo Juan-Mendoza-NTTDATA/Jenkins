@@ -1,0 +1,15 @@
+name: Artifactory Upload
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  artifactoryUpload:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Artifactory Upload
+        run: |
+          echo "Running jfrog rt upload"

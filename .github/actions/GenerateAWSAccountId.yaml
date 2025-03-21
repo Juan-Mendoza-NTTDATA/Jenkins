@@ -1,0 +1,15 @@
+name: Generate AWS Account ID
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  generateAWSAccountId:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Generate AWS Account ID
+        run: |
+          echo "Generating environment variable AWS_ACCOUNT_ID"

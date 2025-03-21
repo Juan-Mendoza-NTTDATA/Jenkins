@@ -1,0 +1,17 @@
+name: JFrog Artifactory
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  jfrogArtifactory:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: JFrog Artifactory
+        run: |
+          echo "Running jf -v"
+          echo "Running jf rt ping"
+          echo "Running jf rt u target/ my-repo/"

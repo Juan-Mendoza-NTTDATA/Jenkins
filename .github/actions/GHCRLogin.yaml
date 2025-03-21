@@ -1,0 +1,15 @@
+name: GHCR Login
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  ghcrLogin:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: GHCR Login
+        run: |
+          echo "Running docker login"

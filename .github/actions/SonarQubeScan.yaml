@@ -1,0 +1,15 @@
+name: SonarQube Scan
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  sonarQubeScan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: SonarQube Scan
+        run: |
+          echo "Running ./mvnw clean org.sonarsource.scanner.maven:sonar-maven-plugin:3.9.1.2184:sonar"

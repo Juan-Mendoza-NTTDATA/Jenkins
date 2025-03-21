@@ -1,0 +1,15 @@
+name: Checkov
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  checkov:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkov
+        run: |
+          echo "Running checkov"

@@ -1,0 +1,15 @@
+name: SonarQube Quality Gate
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  sonarQubeQualityGate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: SonarQube Quality Gate
+        run: |
+          echo "Waiting for Quality Gate"

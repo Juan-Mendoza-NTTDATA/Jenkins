@@ -1,0 +1,15 @@
+name: Grype
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  grype:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Grype
+        run: |
+          echo "Running grype"

@@ -1,0 +1,15 @@
+name: Run Mobile Tests
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  runMobileTests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run Mobile Tests
+        run: |
+          echo "Running ./mvnw test -DselenoidUrl='$SELENIUM_HUB_URL' -Dgroups=com.mydomain.category.interfaces.MobileTests -Dmobile=true -DthreadCount='$THREAD_COUNT'"

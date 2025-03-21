@@ -1,0 +1,20 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Build
+        run: |
+          echo "Running ${{ github.workflow }} Build ${{ github.run_id }} on ${{ github.server_url }}"
+          echo "Building..."
+          echo "Running cloudBuild"
+          echo "Running gcpCloudBuild"
+          echo "Running make"
+          echo "Running ./gcp_ci_build.sh"

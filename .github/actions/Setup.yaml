@@ -1,0 +1,24 @@
+name: Setup
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Setup
+        run: |
+          echo "Running ${{ github.workflow }} Build ${{ github.run_id }} on ${{ github.server_url }}"
+          echo "Setting up..."
+          echo "Running wget -qO- ifconfig.co/json | jq -r '.ip'"
+          echo "Running script_using_jq.sh"
+          echo "Setting currentBuild.displayName"
+          echo "Setting workspace"
+          echo "Running for x in /etc/mybuild.d/*.sh; do if [ -r "$x" ]; then source $x; fi; done;"
+          echo "Setting env.DOCKER_IMAGES"
+          echo "Setting env.DOCKER_IMAGES_TAGS"
+          echo "Printing environment variables"

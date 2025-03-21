@@ -1,0 +1,15 @@
+name: Run Single Package Tests
+
+on:
+  push:
+    branches:
+      - '*'
+
+jobs:
+  runSinglePackageTests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Run Single Package Tests
+        run: |
+          echo "Running ./mvnw test -DselenoidUrl='$SELENIUM_HUB_URL' -Dtest='${params.PACKAGE}' -DthreadCount='$THREAD_COUNT'"
