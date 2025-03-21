@@ -1,0 +1,18 @@
+name: Pre-Build Hook
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Run Pre-Build Hook
+        run: |
+          # Add the commands to run the pre-build hook here

@@ -1,0 +1,18 @@
+name: Groovy Version
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Run Groovy Version
+        run: |
+          # Add the commands to run the groovy version here

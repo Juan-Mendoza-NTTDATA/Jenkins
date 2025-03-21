@@ -1,0 +1,18 @@
+name: Artifactory Upload
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Run Artifactory Upload
+        run: |
+          # Add the commands to run the artifactory upload here

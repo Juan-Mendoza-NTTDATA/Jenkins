@@ -1,0 +1,18 @@
+name: Run Single Package Tests
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Run Single Package Tests
+        run: |
+          # Add the commands to run the single package tests here

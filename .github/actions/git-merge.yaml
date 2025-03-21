@@ -1,0 +1,18 @@
+name: Git Merge
+
+on:
+  push:
+    branches:
+      - staging
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Run Git Merge
+        run: |
+          # Add the commands to run the git merge here

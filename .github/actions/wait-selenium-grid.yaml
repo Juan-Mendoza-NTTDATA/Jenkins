@@ -1,0 +1,18 @@
+name: Wait for Selenium Grid
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Run Wait for Selenium Grid
+        run: |
+          # Add the commands to wait for the selenium grid here

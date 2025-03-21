@@ -1,0 +1,18 @@
+name: Surefire Report
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Run Surefire Report
+        run: |
+          # Add the commands to run the Surefire Report here

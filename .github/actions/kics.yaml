@@ -1,0 +1,18 @@
+name: KICS
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Run KICS
+        run: |
+          # Add the commands to run KICS here
