@@ -1,0 +1,13 @@
+name: Checkov
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkov
+        run: checkov

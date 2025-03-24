@@ -1,0 +1,13 @@
+name: Pre-Build Hook
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Pre-Build Hook
+        run: jenkins/preBuildHook.sh

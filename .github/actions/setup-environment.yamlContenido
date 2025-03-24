@@ -1,0 +1,16 @@
+name: Setup Environment
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Setup Environment
+        run: |
+          echo "Running ${{ github.workflow }} Build ${{ github.run_id }} on ${{ github.server_url }}"
+          echo "Setup Environment"
+          # Add your setup environment commands here

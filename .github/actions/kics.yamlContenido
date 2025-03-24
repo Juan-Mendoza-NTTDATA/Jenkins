@@ -1,0 +1,16 @@
+name: KICS
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: KICS
+        run: |
+          mkdir -p results
+          kics scan --ci --no-color -p ${{ env.WORKSPACE }} --output-path results --ignore-on-exit results --report-formats "json,sarif,html"
+          archiveArtifacts artifacts: 'results/*.html,results/*.sarif,results/*.json', fingerprint: true

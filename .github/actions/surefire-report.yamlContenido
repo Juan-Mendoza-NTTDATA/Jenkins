@@ -1,0 +1,24 @@
+name: Surefire Report
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Surefire Report
+        run: |
+          ./mvnw clean install site surefire-report:report
+          publishHTML [
+            allowMissing: false,
+            alwaysLinkToLastBuild: true,
+            keepAll: false,
+            reportDir: 'target/site',
+            reportFiles: 'surefire-report.html',
+            reportName: 'Surefire Report',
+            reportTitles: '',
+            useWrapperFileDirectory: true
+          ]

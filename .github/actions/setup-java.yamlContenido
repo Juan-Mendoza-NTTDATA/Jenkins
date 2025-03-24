@@ -1,0 +1,15 @@
+name: Setup Java
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'

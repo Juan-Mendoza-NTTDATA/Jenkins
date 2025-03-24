@@ -1,0 +1,21 @@
+name: Build
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Build
+        run: |
+          echo "Running ${{ github.workflow }} Build ${{ github.run_id }} on ${{ github.server_url }}"
+          echo "Building..."
+          cloudBuild timeout_minutes=40
+          gcpCloudBuild args: '--project="$GCR_PROJECT" --substitutions="_REGISTRY=$GCR_REGISTRY,_IMAGE_VERSION=$GIT_COMMIT,_GIT_BRANCH=${GIT_BRANCH##*/}"', timeoutMinutes: 90, skipIfDockerImagesExist: env.DOCKER_IMAGES.tokenize(',').collect { "$it:$VERSION" }
+          timeout 60m {
+            make
+            ./gcp_ci_build.sh
+          }

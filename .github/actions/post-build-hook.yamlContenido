@@ -1,0 +1,13 @@
+name: Post-Build Hook
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Post-Build Hook
+        run: jenkins/postBuildHook.sh

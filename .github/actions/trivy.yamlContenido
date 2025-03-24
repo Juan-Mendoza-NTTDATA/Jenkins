@@ -1,0 +1,19 @@
+name: Trivy
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Trivy
+        run: |
+          trivy fs .
+          trivy "image --no-progress --timeout 20m --exit-code 1 $DOCKER_IMAGE:$DOCKER_TAG"
+          trivyScanDockerImages ["docker_image1:tag1", "docker_image2:tag2"]

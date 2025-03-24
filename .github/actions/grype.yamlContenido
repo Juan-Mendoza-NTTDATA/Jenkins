@@ -1,0 +1,18 @@
+name: Grype
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Grype
+        run: |
+          grype dir:.
+          grype "$DOCKER_IMAGE:$DOCKER_TAG"

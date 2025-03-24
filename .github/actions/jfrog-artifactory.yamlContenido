@@ -1,0 +1,16 @@
+name: JFrog Artifactory
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: JFrog Artifactory
+        run: |
+          jf -v
+          jf rt ping
+          jf rt u target/ my-repo/

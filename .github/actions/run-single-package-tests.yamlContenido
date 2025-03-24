@@ -1,0 +1,16 @@
+name: Run Single Package Tests
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Run Single Package Tests
+        run: ./mvnw test -DselenoidUrl='$SELENIUM_HUB_URL' -Dtest='${{ env.PACKAGE }}' -DthreadCount='$THREAD_COUNT'

@@ -1,0 +1,13 @@
+name: Terraform Init
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Terraform Init
+        run: terraform init

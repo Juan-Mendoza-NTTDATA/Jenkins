@@ -1,0 +1,13 @@
+name: Maven Clean
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Maven Clean
+        run: ./mvnw clean

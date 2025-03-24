@@ -1,0 +1,14 @@
+name: Docker Push
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Docker Push
+        run: |
+          docker push '$DOCKER_IMAGE':'$DOCKER_TAG'

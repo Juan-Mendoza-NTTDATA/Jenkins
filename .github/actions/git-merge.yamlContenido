@@ -1,0 +1,23 @@
+name: Git Merge
+on:
+  push:
+    branches:
+      - staging
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Git Merge
+        run: |
+          echo "Running ${{ github.workflow }} Build ${{ github.run_id }} on ${{ github.server_url }}"
+          echo "User: $(whoami)"
+          echo "id: $(id)"
+          echo "Environment:"
+          env | sort
+          echo "Git Merge"
+          # Add your git merge command here

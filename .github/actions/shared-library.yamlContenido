@@ -1,0 +1,30 @@
+name: Shared Library
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+
+      - name: Build
+        run: ./mvnw clean install
+
+      - name: Test
+        run: ./mvnw test
+
+      - name: SonarQube Scan
+        uses: sonarsource/sonarqube-scan-action@v1
+        with:
+          projectBaseDir: .
+          token: ${{ secrets.SONARQUBE_TOKEN }}
