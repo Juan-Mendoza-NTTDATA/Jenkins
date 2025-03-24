@@ -1,0 +1,59 @@
+name: Setup
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup
+        run: |
+          # Set up environment variables
+          ENV=dev
+          APP=www
+          VERSION=$GIT_COMMIT
+          GITOPS_REPO=git@github.com/HariSekhon/app-k8s
+          CI=true
+          GIT_USERNAME=Jenkins
+          GIT_EMAIL=platform-engineering@MYCOMPANY.CO.UK
+          GITHUB_SSH_KNOWN_HOSTS=$(cat ${{ secrets.github-ssh-known-hosts }})
+          GITLAB_SSH_KNOWN_HOSTS=$(cat ${{ secrets.gitlab-ssh-known-hosts }})
+          AZURE_DEVOPS_SSH_KNOWN_HOSTS=$(cat ${{ secrets.azure-devops-ssh-known-hosts }})
+          BITBUCKET_SSH_KNOWN_HOSTS=$(cat ${{ secrets.bitbucket-ssh-known-hosts }})
+          SSH_KNOWN_HOSTS="$GITHUB_SSH_KNOWN_HOSTS\n$GITLAB_SSH_KNOWN_HOSTS\n$AZURE_DEVOPS_SSH_KNOWN_HOSTS\n$BITBUCKET_SSH_KNOWN_HOSTS"
+          AWS_ACCESS_KEY_ID=${{ secrets.aws-secret-key-id }}
+          AWS_SECRET_ACCESS_KEY=${{ secrets.aws-secret-access-key }}
+          GCP_SERVICEACCOUNT_KEY=${{ secrets.gcp-serviceaccount-key }}
+          GOOGLE_APPLICATION_CREDENTIALS="$WORKSPACE_TMP/.gcloud/application-credentials.json.$BUILD_TAG"
+          DIGITALOCEAN_ACCESS_TOKEN=${{ secrets.digitalocean-access-token }}
+          GITHUB_TOKEN=${{ secrets.github-token }}
+          AWS_ACCESS_KEY=${{ secrets.aws }}
+          AWS_ACCOUNT_ID=${{ secrets.aws-account-id }}
+          AWS_DEFAULT_REGION=eu-west-2
+          AWS_ECR_REGISTRY="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
+          CLOUDSDK_CORE_PROJECT=mycompany-dev
+          CLOUDSDK_COMPUTE_REGION=europe-west2
+          GCR_REGISTRY=eu.gcr.io
+          CLOUDFLARE_API_KEY=${{ secrets.cloudflare-api-key }}
+          DOCKER_BUILDKIT=1
+          DOCKER_IMAGE="$AWS_ECR_REGISTRY/$APP"
+          DOCKER_TAG="$GIT_COMMIT"
+          ARTIFACTORY_URL=http://x.x.x.x:8082/artifactory/
+          ARTIFACTORY_ACCESS_TOKEN=${{ secrets.artifactory-access-token }}
+          ARGOCD_SERVER=argocd.domain.com
+          ARGOCD_AUTH_TOKEN=${{ secrets.argocd-auth-token }}
+          HERMIT_ENV_VARS=$(./bin/hermit env --raw)
+          THREAD_COUNT=6
+          SLACK_MESSAGE="Pipeline <${{ env.JOB_DISPLAY_URL }}|${{ env.JOB_NAME }}> - <${{ env.RUN_DISPLAY_URL }}|Build #${{ env.BUILD_NUMBER }}>"
+          SEMGREP_BASELINE_REF="origin/${{ env.CHANGE_TARGET }}"
+          SEMGREP_TIMEOUT="300"
+
+          # Additional setup steps
+          echo "Setting up..."

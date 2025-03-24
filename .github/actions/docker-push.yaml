@@ -1,0 +1,19 @@
+name: Docker Push
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Docker Push
+        run: |
+          # Push Docker image
+          echo "Pushing Docker image..."
