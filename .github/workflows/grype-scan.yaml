@@ -1,0 +1,19 @@
+name: Grype Scan Workflow
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Grype Scan
+        run: |
+          grype dir:.
+          grype ${{ secrets.DOCKER_IMAGE }}:${{ github.sha }}

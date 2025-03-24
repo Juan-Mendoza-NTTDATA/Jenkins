@@ -1,0 +1,19 @@
+name: Trivy Scan Workflow
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Trivy Scan
+        run: |
+          trivy fs .
+          trivy image --no-progress --timeout 20m --exit-code 1 ${{ secrets.DOCKER_IMAGE }}:${{ github.sha }}

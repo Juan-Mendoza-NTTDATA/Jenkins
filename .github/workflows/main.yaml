@@ -1,0 +1,27 @@
+name: Main Workflow
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup Java
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+
+      - name: Build
+        run: |
+          ./mvnw clean install
+
+      - name: Test
+        run: |
+          ./mvnw test
