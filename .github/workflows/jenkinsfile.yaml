@@ -1,0 +1,205 @@
+name: Jenkins Pipeline
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up JDK
+        uses: actions/setup-java@v2
+        with:
+          java-version: '11'
+
+      - name: Set up Git
+        run: |
+          git config --global user.name 'Jenkins'
+          git config --global user.email 'platform-engineering@MYCOMPANY.CO.UK'
+
+      - name: Set up Docker
+        uses: docker/setup-buildx-action@v1
+
+      - name: Set up AWS CLI
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: 'eu-west-2'
+
+      - name: Set up GCP CLI
+        uses: google-github-actions/setup-gcloud@v0.2.0
+        with:
+          version: 'latest'
+          project_id: 'mycompany-dev'
+          service_account_key: ${{ secrets.GCP_SERVICEACCOUNT_KEY }}
+
+      - name: Set up JFrog CLI
+        uses: jfrog/setup-jfrog-cli@v1
+        with:
+          jfrog-cli-version: '1.46.1'
+
+      - name: Set up SonarQube
+        uses: sonarsource/sonarqube-action@v1
+        with:
+          token: ${{ secrets.SONARQUBE_TOKEN }}
+          scanner-version: '4.6.2'
+
+      - name: Set up Trivy
+        uses: aquasecurity/trivy-action@v0.3.0
+
+      - name: Set up Grype
+        uses: anchore/grype-action@v0.2.0
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v1
+        with:
+          terraform_version: '1.0.0'
+
+      - name: Set up Terragrunt
+        run: |
+          curl -LJO https://github.com/gruntwork-io/terragrunt/releases/download/v0.31.0/terragrunt_linux_amd64
+          chmod +x terragrunt_linux_amd64
+          sudo mv terragrunt_linux_amd64 /usr/local/bin/terragrunt
+
+      - name: Set up Checkov
+        run: |
+          curl -LJO https://github.com/bridgecrewio/checkov/releases/latest/download/checkov
+          chmod +x checkov
+          sudo mv checkov /usr/local/bin/checkov
+
+      - name: Set up Semgrep
+        run: |
+          curl -LJO https://github.com/returntocorp/semgrep/releases/latest/download/semgrep
+          chmod +x semgrep
+          sudo mv semgrep /usr/local/bin/semgrep
+
+      - name: Set up KICS
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/Checkmarx/kics/main/install.sh | bash
+
+      - name: Set up MegaLinter
+        run: |
+          curl -s https://raw.githubusercontent.com/nvuillam/mega-linter/master/install.sh | bash
+
+      - name: Set up Cloudflare CLI
+        run: |
+          curl -sSL https://pkg.cloudflare.com/pubkey.gpg | sudo apt-key add -
+          echo "deb http://pkg.cloudflare.com/ $(lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/cloudflare-cli.list
+          sudo apt-get update
+          sudo apt-get install cloudflare
+
+      - name: Set up Hermit
+        run: |
+          curl -sSL https://get.hermithq.com/hermit.sh | bash
+
+      - name: Set up Selenium Grid
+        run: |
+          wget -qO- ifconfig.co/json | jq -r '.ip'
+          ./selenium_hub_wait_ready.sh '$SELENIUM_HUB_URL' 60
+
+      - name: Set up Artifactory
+        run: |
+          jfrog -v
+          jfrog rt ping
+          jfrog rt u target/ my-repo/
+
+      - name: Set up Surefire Report
+        run: |
+          ./mvnw clean install site surefire-report:report
+          publishHTML [
+            allowMissing: false,
+            alwaysLinkToLastBuild: true,
+            keepAll: false,
+            reportDir: 'target/site',
+            reportFiles: 'surefire-report.html',
+            reportName: 'Surefire Report',
+            reportTitles: '',
+            useWrapperFileDirectory: true
+          ]
+
+      - name: Set up SonarQube Scan
+        run: |
+          ./mvnw clean org.sonarsource.scanner.maven:sonar-maven-plugin:3.9.1.2184:sonar
+
+      - name: Set up SonarQube Quality Gate
+        run: |
+          waitForQualtityGate abortPipeline: true
+
+      - name: Set up Checkov
+        run: |
+          checkov
+
+      - name: Set up Semgrep
+        run: |
+          git fetch origin ${SEMGREP_BASELINE_REF#origin/} && semgrep-agent
+
+      - name: Set up KICS
+        run: |
+          mkdir -p results
+          kics scan --ci --no-color -p ${WORKSPACE} --output-path results --ignore-on-exit results --report-formats "json,sarif,html"
+          archiveArtifacts artifacts: 'results/*.html,results/*.sarif,results/*.json', fingerprint: true
+
+      - name: Set up MegaLinter
+        run: |
+          /entrypoint.sh
+
+      - name: Set up Pre-Build Hook
+        run: |
+          if [ -r 'jenkins/preBuildHook.sh' ]; then
+            jenkins/preBuildHook.sh
+          fi
+
+      - name: Set up Build
+        run: |
+          echo "Running ${env.JOB_NAME} Build ${env.BUILD_ID} on ${env.JENKINS_URL}"
+          echo 'Building...'
+          cloudBuild timeout_minutes=40
+          gcpCloudBuild args: '--project="$GCR_PROJECT" --substitutions="_REGISTRY=$GCR_REGISTRY,_IMAGE_VERSION=$GIT_COMMIT,_GIT_BRANCH=${GIT_BRANCH##*/}"', timeoutMinutes: 90, skipIfDockerImagesExist: env.DOCKER_IMAGES.tokenize(',').collect { "$it:$VERSION" }
+          timeout time: 60, unit: 'MINUTES' {
+            make
+            ./gcp_ci_build.sh
+          }
+
+      - name: Set up Post-Build Hook
+        run: |
+          if [ -r 'jenkins/postBuildHook.sh' ]; then
+            jenkins/postBuildHook.sh
+          fi
+
+      - name: Set up Artifactory Upload
+        run: |
+          jfrog rt upload --url "$ARTIFACTORY_URL" --access-token "$ARTIFACTORY_ACCESS_TOKEN" target/myapp-0.0.1-SNAPSHOT.jar myapp/
+
+      - name: Set up GHCR Login
+        run: |
+          docker login ghcr.io -u '$GITHUB_TOKEN_USR' --password-stdin <<< '$GITHUB_TOKEN_PSW'
+
+      - name: Set up Docker Build
+        run: |
+          docker build -t '$DOCKER_IMAGE':'$DOCKER_TAG' --build-arg=BUILDKIT_INLINE_CACHE=1 --cache-from '$DOCKER_IMAGE':'$DOCKER_TAG'
+
+      - name: Set up Trivy
+        run: |
+          trivy fs .
+          trivy "image --no-progress --timeout 20m --exit-code 1 $DOCKER_IMAGE:$DOCKER_TAG"
+          trivyScanDockerImages ["docker_image1:tag1", "docker_image2:tag2"]
+
+      - name: Set up Grype
+        run: |
+          grype dir:.
+          grype "$DOCKER_IMAGE:$DOCKER_TAG"
+
+      - name: Set up Docker Push
+        run: |
+          docker push '$DOCKER_IMAGE':'$DOCKER_TAG'
+
+      - name: Set up Terraform Init
+        run: |
+          terraform init
