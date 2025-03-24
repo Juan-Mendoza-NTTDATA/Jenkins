@@ -1,0 +1,57 @@
+name: Test
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up environment
+        run: |
+          export ENV=dev
+          export APP=www
+          export VERSION=$GIT_COMMIT
+          export GITOPS_REPO=git@github.com/HariSekhon/app-k8s
+          export CI=true
+          export GIT_USERNAME=Jenkins
+          export GIT_EMAIL=platform-engineering@MYCOMPANY.CO.UK
+          export GITHUB_SSH_KNOWN_HOSTS=$(cat github-ssh-known-hosts)
+          export GITLAB_SSH_KNOWN_HOSTS=$(cat gitlab-ssh-known-hosts)
+          export AZURE_DEVOPS_SSH_KNOWN_HOSTS=$(cat azure-devops-ssh-known-hosts)
+          export BITBUCKET_SSH_KNOWN_HOSTS=$(cat bitbucket-ssh-known-hosts)
+          export SSH_KNOWN_HOSTS="$GITHUB_SSH_KNOWN_HOSTS\n$GITLAB_SSH_KNOWN_HOSTS\n$AZURE_DEVOPS_SSH_KNOWN_HOSTS\n$BITBUCKET_SSH_KNOWN_HOSTS"
+          export AWS_ACCESS_KEY_ID=$(cat aws-secret-key-id)
+          export AWS_SECRET_ACCESS_KEY=$(cat aws-secret-access-key)
+          export GCP_SERVICEACCOUNT_KEY=$(cat gcp-serviceaccount-key)
+          export GOOGLE_APPLICATION_CREDENTIALS="$WORKSPACE_TMP/.gcloud/application-credentials.json.$BUILD_TAG"
+          export DIGITALOCEAN_ACCESS_TOKEN=$(cat digitalocean-access-token)
+          export GITHUB_TOKEN=$(cat github-token)
+          export AWS_ACCESS_KEY=$(cat aws)
+          export AWS_ACCOUNT_ID=$(cat aws-account-id)
+          export AWS_DEFAULT_REGION=eu-west-2
+          export AWS_ECR_REGISTRY="${AWS_ACCOUNT_ID}.dkr.ecr.${AWS_DEFAULT_REGION}.amazonaws.com"
+          export CLOUDSDK_CORE_PROJECT=mycompany-dev
+          export CLOUDSDK_COMPUTE_REGION=europe-west2
+          export GCR_REGISTRY=eu.gcr.io
+          export CLOUDFLARE_API_KEY=$(cat cloudflare-api-key)
+          export DOCKER_BUILDKIT=1
+          export DOCKER_IMAGE="$AWS_ECR_REGISTRY/$APP"
+          export DOCKER_TAG=$GIT_COMMIT
+          export ARTIFACTORY_URL=http://x.x.x.x:8082/artifactory/
+          export ARTIFACTORY_ACCESS_TOKEN=$(cat artifactory-access-token)
+          export ARGOCD_SERVER=argocd.domain.com
+          export ARGOCD_AUTH_TOKEN=$(cat argocd-auth-token)
+          export HERMIT_ENV_VARS=$(./bin/hermit env --raw)
+          export THREAD_COUNT=6
+          export SLACK_MESSAGE="Pipeline <${env.JOB_DISPLAY_URL}|${env.JOB_NAME}> - <${env.RUN_DISPLAY_URL}|Build #${env.BUILD_NUMBER}>"
+          export SEMGREP_BASELINE_REF="origin/${env.CHANGE_TARGET}"
+          export SEMGREP_TIMEOUT=300
+
+      - name: Test
+        run: make test

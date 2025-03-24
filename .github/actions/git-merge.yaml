@@ -1,0 +1,23 @@
+name: Git Merge
+on:
+  push:
+    branches:
+      - staging
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Git
+        run: |
+          git config --global user.name "Jenkins"
+          git config --global user.email "platform-engineering@MYCOMPANY.CO.UK"
+
+      - name: Git Merge
+        run: |
+          git merge staging dev
+          git push
