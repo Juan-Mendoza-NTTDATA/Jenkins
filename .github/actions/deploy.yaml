@@ -1,0 +1,22 @@
+name: Deploy
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up environment
+        run: |
+          export ENV=dev
+          export APP=www
+          export VERSION=$GITHUB_SHA
+
+      - name: Deploy application
+        run: ./deploy.sh
