@@ -1,0 +1,19 @@
+name: Grype
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Grype
+        run: |
+          milestone(ordinal: null, label: "Milestone: Grype")
+          catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+            grype("dir:.")
+            grype("$DOCKER_IMAGE:$DOCKER_TAG")
+          }

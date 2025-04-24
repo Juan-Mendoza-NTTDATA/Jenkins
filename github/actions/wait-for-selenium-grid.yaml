@@ -1,0 +1,14 @@
+name: Wait for Selenium Grid
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Wait for Selenium Grid to be up
+        run: ./selenium_hub_wait_ready.sh '$SELENIUM_HUB_URL' 60

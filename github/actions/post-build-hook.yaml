@@ -1,0 +1,15 @@
+name: Post-Build Hook
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Post-Build Hook
+        if: fileExists('jenkins/postBuildHook.sh')
+        run: jenkins/postBuildHook.sh

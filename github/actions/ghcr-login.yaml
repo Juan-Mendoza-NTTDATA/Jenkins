@@ -1,0 +1,21 @@
+name: GHCR Login
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: GHCR Login
+        runs-on: ubuntu-latest
+        steps:
+          - name: Check out repository
+            uses: actions/checkout@v2
+
+          - name: GHCR Login
+            run: |
+              docker login ghcr.io -u '$GITHUB_TOKEN_USR' --password-stdin <<< '$GITHUB_TOKEN_PSW'

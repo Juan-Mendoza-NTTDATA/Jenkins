@@ -1,0 +1,20 @@
+name: Trivy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Trivy
+        run: |
+          milestone(ordinal: null, label: "Milestone: Trivy")
+          catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
+            trivy('fs . ')
+            trivy("image --no-progress --timeout 20m --exit-code 1 $DOCKER_IMAGE:$DOCKER_TAG")
+            trivyScanDockerImages(["docker_image1:tag1", "docker_image2:tag2"])
+          }

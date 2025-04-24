@@ -1,0 +1,17 @@
+name: MegaLinter
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: MegaLinter
+        run: |
+          container('megalinter') {
+            sh '/entrypoint.sh'
+          }

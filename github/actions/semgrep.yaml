@@ -1,0 +1,18 @@
+name: Semgrep
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Semgrep
+        if: env.CHANGE_ID && env.BRANCH_NAME.startsWith("PR-")
+        run: |
+          container('semgrep') {
+            sh 'git fetch origin ${SEMGREP_BASELINE_REF#origin/} && semgrep-agent'
+          }

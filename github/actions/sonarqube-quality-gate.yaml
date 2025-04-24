@@ -1,0 +1,15 @@
+name: SonarQube Quality Gate
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: SonarQube Quality Gate
+        timeout: 2m
+        run: waitForQualityGate abortPipeline: true

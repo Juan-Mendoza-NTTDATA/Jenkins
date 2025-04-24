@@ -1,0 +1,15 @@
+name: Pre-Build Hook
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Pre-Build Hook
+        if: fileExists('jenkins/preBuildHook.sh')
+        run: jenkins/preBuildHook.sh

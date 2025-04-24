@@ -1,0 +1,14 @@
+name: Terraform Tflint
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Terraform Tflint
+        run: tflint .

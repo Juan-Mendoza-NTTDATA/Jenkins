@@ -1,0 +1,14 @@
+name: Terraform Tfdestroy
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Terraform Tfdestroy
+        run: tfdestroy .

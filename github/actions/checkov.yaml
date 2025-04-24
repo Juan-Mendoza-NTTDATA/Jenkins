@@ -1,0 +1,15 @@
+name: Checkov
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkov
+        if: env.CHANGE_ID && env.BRANCH_NAME.startsWith("PR-")
+        run: checkov

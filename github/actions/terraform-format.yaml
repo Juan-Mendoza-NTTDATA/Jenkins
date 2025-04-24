@@ -1,0 +1,14 @@
+name: Terraform Format
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Terraform Format
+        run: terraform fmt -check

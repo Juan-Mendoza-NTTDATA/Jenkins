@@ -1,0 +1,19 @@
+name: KICS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: KICS
+        run: |
+          container('kics') {
+            sh 'mkdir -p results'
+            sh 'kics scan --ci --no-color -p ${WORKSPACE} --output-path results --ignore-on-exit results --report-formats "json,sarif,html"'
+            archiveArtifacts(artifacts: 'results/*.html,results/*.sarif,results/*.json', fingerprint: true)
+          }
