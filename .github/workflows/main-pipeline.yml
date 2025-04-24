@@ -1,0 +1,55 @@
+name: Main Pipeline
+
+on:
+  push:
+    branches: [main]
+
+env:
+  PROJECT_NAME: JPV
+  ENVIRONMENT: dev
+  STORAGE_ACCOUNT_NAME: storagejapv
+
+jobs:
+  preparation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Set up environment variables
+        run: |
+          echo "PROJECT_NAME=${{ env.PROJECT_NAME }}" >> $GITHUB_ENV
+          echo "ENVIRONMENT=${{ env.ENVIRONMENT }}" >> $GITHUB_ENV
+          echo "STORAGE_ACCOUNT_NAME=${{ env.STORAGE_ACCOUNT_NAME }}" >> $GITHUB_ENV
+
+  build:
+    needs: preparation
+    uses: ./.github/workflows/reusable/build-angular-app.yml
+    with:
+      node-version: '10'
+      environment: ${{ env.ENVIRONMENT }}
+
+  jscrambler:
+    needs: build
+    uses: ./.github/workflows/reusable/run-jscrambler.yml
+    with:
+      jscrambler-access-key: ${{ secrets.JSCRAMBLER_ACCESS_KEY }}
+      jscrambler-secret-key: ${{ secrets.JSCRAMBLER_SECRET_KEY }}
+      jscrambler-application-id: ${{ secrets.JSCRAMBLER_APPLICATION_ID }}
+
+  sast:
+    needs: jscrambler
+    uses: ./.github/workflows/reusable/run-sast-analysis.yml
+
+  deploy:
+    needs: sast
+    uses: ./.github/workflows/reusable/deploy-to-azure-storage.yml
+    with:
+      storage-account: ${{ env.STORAGE_ACCOUNT_NAME }}
+      source-path: dist
+
+  notify:
+    needs: deploy
+    uses: ./.github/workflows/reusable/notify-result.yml
+    with:
+      status: 'SUCCESS'
+      recipients: ''

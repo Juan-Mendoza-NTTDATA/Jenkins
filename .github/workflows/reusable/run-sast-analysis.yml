@@ -1,0 +1,12 @@
+name: Run SAST Analysis
+
+on:
+  workflow_call:
+
+jobs:
+  sast:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run SAST Analysis
+        run: npm run sast
