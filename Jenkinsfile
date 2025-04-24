@@ -16,11 +16,11 @@ try {
       env.deploymentEnvironment = "${deploymentEnvironment}";
       utils.setNodeVersion("NODE10_ANGULAR7_CHROME78");
       utils.setReportPathsForSonar("coverage/microapp");
-      //utils.enableJscrambler();
+      utils.enableJscrambler();
       utils.prepare();
       utils.setAzureKeyVaultEnabled(false);
-      //utils.setAngularEnvironmentFromVault(["inct-key-encription-desa":"encrypt_value", "inct-azure-api-url":"url_api"],"src/environments/environment.dev.ts");
-      //utils.setReuseJscramblerApp("ob");
+      utils.setAngularEnvironmentFromVault(["inct-key-encription-desa":"encrypt_value", "inct-azure-api-url":"url_api"],"src/environments/environment.dev.ts");
+      utils.setReuseJscramblerApp("ob");
     }
 
     stage('Build') { 
