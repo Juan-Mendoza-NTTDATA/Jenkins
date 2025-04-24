@@ -3,9 +3,9 @@ import sharedlib.WebAngularMicroAppUtil
 
 def utils = new WebAngularMicroAppUtil(steps, this);
 def recipients = '';
-def project = 'INCT';
+def project = 'JPV';
 def deploymentEnvironment = 'dev';
-def storageAccountName = "stgeu2nfmcd03";
+def storageAccountName = "storagejapv";
 
 try {
    node {
@@ -19,7 +19,7 @@ try {
       utils.enableJscrambler();
       utils.prepare();
       utils.setAzureKeyVaultEnabled(false);
-      utils.setAngularEnvironmentFromVault(["inct-key-encription-desa":"encrypt_value", "inct-azure-api-url":"url_api"],"src/environments/environment.dev.ts");
+      utils.setAngularEnvironmentFromVault(["jpv-key-encription-desa":"encrypt_value", "jpv-azure-api-url":"url_api"],"src/environments/environment.dev.ts");
       utils.setReuseJscramblerApp("ob");
     }
 
@@ -47,12 +47,12 @@ try {
 
        //utils.withAzureVaultCredentials([
        //[azureCredentialId: "api-gateway-client-id", azureCredentialVariable: "apiGatewayClientId" ],
-       //[azureCredentialId: "API-BCP-URL", azureCredentialVariable: "apiGatewayClientSecret" ],
+       //[azureCredentialId: "API-NTT-URL", azureCredentialVariable: "apiGatewayClientSecret" ],
        //]) {
        //utils.setWebAppSettingsEnvironmentVariables([
        //"API_GATEWAY_CLIENT_ID=${env.apiGatewayClientId}",
        //"API_GATEWAY_CLIENT_SECRET=${env.apiGatewayClientSecret}",
-       //"API_BCP_URL=https://bcp-node-api-mock.azurewebsites.net"
+       //"API_NTT_URL=https://ntt-node-api-mock.azurewebsites.net"
        //]);
        //utils.deployToAzureWebappContainer(APP_NAME,APP_VERSION,AZURE_RESOURCE_GROUP_NAME,AZURE_WEBAPP_NAME,true);
      }

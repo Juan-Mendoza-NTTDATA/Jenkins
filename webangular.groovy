@@ -16,13 +16,13 @@ class WebAngularMicroAppUtil extends NodeLibraryJenkinsUtil {
   private node12Chrome85Version					          = "NODE12_CHROME85"
   private node16Chrome97Version					          = "NODE16_CHROME97"
   private node18Chrome113Version					        = "NODE18_CHROME113"
-  private dockerNode10Angular7Enviroment          = "bcp/node10-angular7:1.1"
-  private dockerNode10Angular7Chrome78Enviroment  = "bcp/node10-angular7-chrome78:1.0"
-  private dockerNode12Enviroment		 		          = "bcp/node12:1.0"
-  private dockerNode12Chrome78Enviroment    	    = "bcp/node12-chrome78:2.0"
-  private dockerNode12Chrome85Enviroment    	    = "bcp/node12-chrome85:2.0"
-  private dockerNode16Chrome97Enviroment    	    = "bcp/node16-chrome97:1.0"
-  private dockerNode18Chrome113Enviroment    	    = "bcp/node18-chrome113:1.0"
+  private dockerNode10Angular7Enviroment          = "ntt/node10-angular7:1.1"
+  private dockerNode10Angular7Chrome78Enviroment  = "ntt/node10-angular7-chrome78:1.0"
+  private dockerNode12Enviroment		 		          = "ntt/node12:1.0"
+  private dockerNode12Chrome78Enviroment    	    = "ntt/node12-chrome78:2.0"
+  private dockerNode12Chrome85Enviroment    	    = "ntt/node12-chrome85:2.0"
+  private dockerNode16Chrome97Enviroment    	    = "ntt/node16-chrome97:1.0"
+  private dockerNode18Chrome113Enviroment    	    = "ntt/node18-chrome113:1.0"
   private boolean isEnableJscrambler              = false
   String  reuseJscramblerApp                      = ""
   private AzureUtil azureUtil
@@ -448,10 +448,10 @@ class WebAngularMicroAppUtil extends NodeLibraryJenkinsUtil {
       text: jsonResultParsed.toString()
     )
 
-    String bcpVirtualRegistry = getUrlRepository("${script.env.deploymentEnvironment}".toLowerCase())
+    String nttVirtualRegistry = getUrlRepository("${script.env.deploymentEnvironment}".toLowerCase())
     def npmArguments = """"
         registry = ${artifact_npm_registry_url}
-        @bcp:registry = ${bcpVirtualRegistry}
+        @ntt:registry = ${nttVirtualRegistry}
         quiet = true
         strict-ssl = false
         progress = false
