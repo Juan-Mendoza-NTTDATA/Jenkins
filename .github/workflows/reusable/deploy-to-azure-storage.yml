@@ -1,0 +1,20 @@
+name: Deploy to Azure Storage
+
+on:
+  workflow_call:
+    inputs:
+      storage-account:
+        required: true
+        type: string
+      source-path:
+        required: true
+        type: string
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Upload to Azure Storage
+        run: az storage blob upload-batch -d ${{ inputs.storage-account }} -s ${{ inputs.source-path }}
+        env:
+          AZURE_CREDENTIALS: ${{ secrets.AZURE_CREDENTIALS }}
