@@ -1,0 +1,79 @@
+name: Main Pipeline
+
+on:
+  push:
+    branches: [main]
+
+env:
+  PROJECT_NAME: inct
+  ENVIRONMENT: dev
+  STORAGE_ACCOUNT_NAME: stgeu2nfmcd03
+  RECIPIENTS: 'example@example.com'
+
+jobs:
+  preparation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Notify Start
+        uses: ./.github/workflows/reusable/notify-result.yml
+        with:
+          status: 'START'
+          recipients: ${{ env.RECIPIENTS }}
+      - uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '10'
+      - name: Install dependencies
+        run: npm install
+
+  build:
+    needs: preparation
+    uses: ./.github/workflows/reusable/build-angular-app.yml
+    with:
+      node-version: '10'
+      environment: ${{ env.ENVIRONMENT }}
+
+  qa:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run QA
+        run: npm run qa
+
+  sast:
+    needs: qa
+    uses: ./.github/workflows/reusable/run-sast-analysis.yml
+
+  deploy-artifact:
+    needs: sast
+    runs-on: ubuntu-latest
+    steps:
+      - name: Upload Artifact
+        run: npm run upload
+
+  deploy-azure:
+    needs: deploy-artifact
+    uses: ./.github/workflows/reusable/deploy-to-azure-storage.yml
+    with:
+      storage-account: ${{ env.STORAGE_ACCOUNT_NAME }}
+      source-path: dist
+
+  results:
+    needs: deploy-azure
+    runs-on: ubuntu-latest
+    steps:
+      - name: Save Result
+        run: npm run save-result
+
+  post-execution:
+    needs: results
+    runs-on: ubuntu-latest
+    steps:
+      - name: Execute Post Execution Tasks
+        run: npm run post-execution
+      - name: Notify Success
+        uses: ./.github/workflows/reusable/notify-result.yml
+        with:
+          status: 'SUCCESS'
+          recipients: ${{ env.RECIPIENTS }}
