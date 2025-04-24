@@ -1,0 +1,16 @@
+name: Run SAST Analysis
+
+on:
+  workflow_call:
+    inputs:
+      sast-tool:
+        required: true
+        type: string
+
+jobs:
+  sast:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run SAST Analysis
+        run: ${{ inputs.sast-tool }}
